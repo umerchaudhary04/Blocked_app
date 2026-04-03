@@ -9,17 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  tflite_flutter: ^0.12.1      
-  image: ^4.1.3                
-  fl_chart: ^1.2.0            
-  shared_preferences: ^2.2.2   
+  fl_chart: ^0.65.0            
+  shared_preferences: ^2.2.2  
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/models/mobilenet_v3_blocked.tflite
-    - assets/models/labels.txt
-    
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

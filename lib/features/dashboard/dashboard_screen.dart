@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../core/services/native_bridge.dart';
@@ -17,9 +19,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void toggleProtection(bool value) {
     setState(() => isProtectionActive = value);
     if (value) {
-      NativeBridge.startProtection();
-    } else {
-      NativeBridge.stopProtection();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Protection UI Active (AI Disabled)')),
+      );
     }
   }
 
