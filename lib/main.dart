@@ -37,10 +37,11 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+    // Phase 2: Check actual status on app open
     _checkCurrentStatus();
   }
 
-  // AppStore Polish: Check real status when app opens
+  // Phase 2: Check real status
   Future<void> _checkCurrentStatus() async {
     try {
       final String status = await platform.invokeMethod('getStatus');
@@ -68,7 +69,7 @@ class _DashboardState extends State<Dashboard> {
       } else {
         final String result = await platform.invokeMethod('startProtection');
 
-        // AppStore Polish: Handle the results!
+        // Phase 2: Proper result handling and UI update
         if (result == "CONNECTED") {
           setState(() {
             isProtected = true;
@@ -86,6 +87,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  // Phase 2: User-friendly error display
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -108,6 +110,13 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Phase 2: Add Branding within app
+            // Image.asset('assets/images/logo.png', height: 100), // Uncomment and use actual asset path
+            const Icon(Icons.security,
+                size: 80,
+                color: Colors
+                    .blueGrey), // Temporary placeholder, replace with Image.asset
+            const SizedBox(height: 20),
             Icon(
               isProtected ? Icons.shield : Icons.shield_outlined,
               size: 120,

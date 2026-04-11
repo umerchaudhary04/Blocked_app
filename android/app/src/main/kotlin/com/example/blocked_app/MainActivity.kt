@@ -18,16 +18,19 @@ class MainActivity: FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
                 "startProtection" -> {
+                    // Phase 2: Start permission checking process
                     pendingResult = result
                     startVpn()
                 }
                 "stopProtection" -> {
+                    // Phase 2: Add Stop action
                     val intent = Intent(this, BlockedVpnService::class.java)
                     intent.action = "STOP_VPN"
                     startService(intent)
                     result.success("DISCONNECTED")
                 }
                 "getStatus" -> {
+                    // Phase 2: Provide status to Flutter
                     result.success(if (BlockedVpnService.isRunning) "CONNECTED" else "DISCONNECTED")
                 }
                 else -> result.notImplemented()
@@ -38,17 +41,17 @@ class MainActivity: FlutterActivity() {
     private fun startVpn() {
         val vpnIntent = VpnService.prepare(this)
         if (vpnIntent != null) {
-            // Android requires the user to grant permission
+            // Phase 2: Android requires user permission, request it
             startActivityForResult(vpnIntent, VPN_REQUEST_CODE)
         } else {
-            // Permission was already granted previously
+            // Permission already granted, start service directly
             startVpnService()
             pendingResult?.success("CONNECTED")
             pendingResult = null
         }
     }
 
-    // This catches the user's choice on the permission pop-up!
+    // Phase 2: Handle user's permission choice
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == VPN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
