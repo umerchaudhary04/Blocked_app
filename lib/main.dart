@@ -79,7 +79,8 @@ class _DashboardState extends State<Dashboard> {
         }
       }
     } on PlatformException catch (e) {
-      _showError("System Error: ${e.message}");
+      debugPrint("System Error: ${e.message}");
+      _showError("An unexpected system error occurred.");
     }
 
     setState(() {
