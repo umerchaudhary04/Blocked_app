@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final bool initialIsProtected = prefs.getBool('isProtected') ?? false;
+
+  runApp(MyApp(initialIsProtected: initialIsProtected));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool initialIsProtected;
+  const MyApp({super.key, required this.initialIsProtected});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +22,14 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blueAccent,
         scaffoldBackgroundColor: const Color(0xFF121212),
       ),
-      home: const Dashboard(),
+      home: Dashboard(initialIsProtected: initialIsProtected),
     );
   }
 }
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final bool initialIsProtected;
+  const Dashboard({super.key, required this.initialIsProtected});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -31,23 +38,41 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   static const platform = MethodChannel('com.blocked.app/native');
 
-  bool isProtected = false;
+  late bool isProtected;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    isProtected = widget.initialIsProtected;
     // Phase 2: Check actual status on app open
     _checkCurrentStatus();
   }
 
   // Phase 2: Check real status
   Future<void> _checkCurrentStatus() async {
+    bool cachedStatus = widget.initialIsProtected;
+
     try {
+      // Sync with real status
       final String status = await platform.invokeMethod('getStatus');
-      setState(() {
-        isProtected = status == "CONNECTED";
-      });
+      final bool realStatus = status == "CONNECTED";
+
+      if (cachedStatus != realStatus) {
+        // Only update state if the user hasn't toggled it manually while we were fetching
+        if (isProtected == cachedStatus) {
+          setState(() {
+            isProtected = realStatus;
+          });
+        }
+
+        try {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isProtected', realStatus);
+        } catch (e) {
+          debugPrint("Failed to cache status: $e");
+        }
+      }
     } catch (e) {
       debugPrint("Failed to get status: $e");
     }
@@ -65,6 +90,8 @@ class _DashboardState extends State<Dashboard> {
           setState(() {
             isProtected = false;
           });
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isProtected', false);
         }
       } else {
         final String result = await platform.invokeMethod('startProtection');
@@ -74,6 +101,8 @@ class _DashboardState extends State<Dashboard> {
           setState(() {
             isProtected = true;
           });
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isProtected', true);
         } else if (result == "PERMISSION_DENIED") {
           _showError("Permission denied. VPN cannot start.");
         }
