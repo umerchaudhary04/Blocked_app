@@ -117,10 +117,18 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors
                     .blueGrey), // Temporary placeholder, replace with Image.asset
             const SizedBox(height: 20),
-            Icon(
-              isProtected ? Icons.shield : Icons.shield_outlined,
-              size: 120,
-              color: isProtected ? Colors.green : Colors.grey,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+              child: Icon(
+                isProtected ? Icons.shield : Icons.shield_outlined,
+                key: ValueKey<bool>(isProtected),
+                size: 120,
+                color: isProtected ? Colors.green : Colors.grey,
+                semanticLabel:
+                    isProtected ? "Protection Active" : "Unprotected",
+              ),
             ),
             const SizedBox(height: 20),
             Text(
@@ -133,21 +141,28 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(height: 40),
             isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _toggleProtection,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                ? const CircularProgressIndicator(
+                    semanticsLabel: 'Processing protection status',
+                  )
+                : Tooltip(
+                    message:
+                        isProtected ? "Stop protection" : "Start protection",
+                    child: ElevatedButton(
+                      onPressed: _toggleProtection,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15),
+                        backgroundColor:
+                            isProtected ? Colors.red : Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      isProtected ? "STOP" : "START",
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                      child: Text(
+                        isProtected ? "STOP" : "START",
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
+                      ),
                     ),
                   ),
           ],
