@@ -111,11 +111,10 @@ class _DashboardState extends State<Dashboard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Phase 2: Add Branding within app
-            // Image.asset('assets/images/logo.png', height: 150), // Uncomment and use actual asset path
             const Icon(Icons.security,
                 size: 80,
                 color: Colors
-                    .blueGrey), // Temporary placeholder, replace with Image.asset
+                    .blueGrey),
             const SizedBox(height: 20),
             Icon(
               isProtected ? Icons.shield : Icons.shield_outlined,
