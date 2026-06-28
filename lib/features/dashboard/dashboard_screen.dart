@@ -50,22 +50,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Text('Blocks This Week',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
-            SizedBox(
-              height: 200,
-              child: PieChart(
-                PieChartData(
-                  sections: [
-                    PieChartSectionData(
-                        color: Colors.red, value: 40, title: 'NSFW'),
-                    PieChartSectionData(
-                        color: Colors.orange, value: 25, title: 'Gore'),
-                    PieChartSectionData(
-                        color: Colors.grey, value: 15, title: 'Ads'),
-                  ],
-                  centerSpaceRadius: 40,
-                ),
-              ),
-            ),
+            // ⚡ Bolt Optimization: Extracted PieChart to a const widget.
+            // This prevents the expensive chart from rebuilding 60 times a second
+            // when the user drags the sensitivity sliders below, saving CPU cycles.
+            const _BlocksPieChart(),
             const Divider(height: 40),
             const Text('Sensitivity Configuration',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -95,6 +83,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onChanged: onChanged,
         ),
       ],
+    );
+  }
+}
+
+class _BlocksPieChart extends StatelessWidget {
+  const _BlocksPieChart();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: PieChart(
+        PieChartData(
+          sections: [
+            PieChartSectionData(color: Colors.red, value: 40, title: 'NSFW'),
+            PieChartSectionData(color: Colors.orange, value: 25, title: 'Gore'),
+            PieChartSectionData(color: Colors.grey, value: 15, title: 'Ads'),
+          ],
+          centerSpaceRadius: 40,
+        ),
+      ),
     );
   }
 }
