@@ -90,10 +90,7 @@ class _DashboardState extends State<Dashboard> {
   // Phase 2: User-friendly error display
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.redAccent,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
     );
   }
 
@@ -112,15 +109,26 @@ class _DashboardState extends State<Dashboard> {
           children: [
             // Phase 2: Add Branding within app
             // Image.asset('assets/images/logo.png', height: 150), // Uncomment and use actual asset path
-            const Icon(Icons.security,
-                size: 80,
-                color: Colors
-                    .blueGrey), // Temporary placeholder, replace with Image.asset
+            const Icon(
+              Icons.security,
+              size: 80,
+              color: Colors.blueGrey,
+            ), // Temporary placeholder, replace with Image.asset
             const SizedBox(height: 20),
-            Icon(
-              isProtected ? Icons.shield : Icons.shield_outlined,
-              size: 120,
-              color: isProtected ? Colors.green : Colors.grey,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return ScaleTransition(scale: animation, child: child);
+              },
+              child: Icon(
+                isProtected ? Icons.shield : Icons.shield_outlined,
+                key: ValueKey<bool>(isProtected),
+                size: 120,
+                color: isProtected ? Colors.green : Colors.grey,
+                semanticLabel: isProtected
+                    ? 'Protection Active Icon'
+                    : 'Unprotected Icon',
+              ),
             ),
             const SizedBox(height: 20),
             Text(
@@ -138,9 +146,12 @@ class _DashboardState extends State<Dashboard> {
                     onPressed: _toggleProtection,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
+                        horizontal: 40,
+                        vertical: 15,
+                      ),
+                      backgroundColor: isProtected
+                          ? Colors.red
+                          : Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
