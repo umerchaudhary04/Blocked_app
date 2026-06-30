@@ -24,6 +24,9 @@ class BlockedVpnService : VpnService() {
         val builder = Builder()
         builder.addAddress("10.0.0.2", 32)
         builder.addRoute("0.0.0.0", 0)
+        // Add IPv6 routing to prevent IPv6 leak
+        builder.addAddress("fd00::1", 128)
+        builder.addRoute("::", 0)
         // Ensure standard DNS for this phase, update to Cloudflare Family for protection
         builder.addDnsServer("1.1.1.3")
 
