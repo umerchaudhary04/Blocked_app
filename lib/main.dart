@@ -112,28 +112,44 @@ class _DashboardState extends State<Dashboard> {
           children: [
             // Phase 2: Add Branding within app
             // Image.asset('assets/images/logo.png', height: 150), // Uncomment and use actual asset path
-            const Icon(Icons.security,
-                size: 80,
-                color: Colors
-                    .blueGrey), // Temporary placeholder, replace with Image.asset
+            const Icon(
+              Icons.security,
+              size: 80,
+              color: Colors.blueGrey,
+              semanticLabel: 'Blocked Logo',
+            ), // Temporary placeholder, replace with Image.asset
             const SizedBox(height: 20),
-            Icon(
-              isProtected ? Icons.shield : Icons.shield_outlined,
-              size: 120,
-              color: isProtected ? Colors.green : Colors.grey,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                isProtected ? Icons.shield : Icons.shield_outlined,
+                key: ValueKey<bool>(isProtected),
+                size: 120,
+                color: isProtected ? Colors.green : Colors.grey,
+                semanticLabel: isProtected
+                    ? "Protection shield active"
+                    : "Protection shield inactive",
+              ),
             ),
             const SizedBox(height: 20),
-            Text(
-              isProtected ? "Protection Active" : "Unprotected",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: isProtected ? Colors.green : Colors.grey,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Text(
+                isProtected ? "Protection Active" : "Unprotected",
+                key: ValueKey<bool>(isProtected),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: isProtected ? Colors.green : Colors.grey,
+                ),
               ),
             ),
             const SizedBox(height: 40),
             isLoading
-                ? const CircularProgressIndicator()
+                ? Semantics(
+                    label: 'Loading protection status',
+                    child: const CircularProgressIndicator(),
+                  )
                 : ElevatedButton(
                     onPressed: _toggleProtection,
                     style: ElevatedButton.styleFrom(
