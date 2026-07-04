@@ -24,7 +24,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Unprotected'), findsOneWidget);
@@ -41,7 +41,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -61,7 +61,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Unprotected'), findsOneWidget);
@@ -86,7 +86,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -111,7 +111,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     // Tap START button
@@ -135,7 +135,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     // Tap START button
