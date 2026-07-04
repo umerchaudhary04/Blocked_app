@@ -120,8 +120,13 @@ class _DashboardState extends State<Dashboard> {
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.redAccent,
+        content: Text(message, style: const TextStyle(color: Colors.white)),
+        backgroundColor: Colors.redAccent.shade700,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: const EdgeInsets.all(16),
       ),
     );
   }
@@ -174,27 +179,38 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(height: 40),
-            isLoading
-                ? Semantics(
-                    label: 'Loading protection status',
-                    child: const CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: _toggleProtection,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+            ElevatedButton(
+              onPressed: isLoading ? null : _toggleProtection,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: isProtected ? Colors.red : Colors.blueAccent,
+                disabledBackgroundColor: isProtected ? Colors.red.withValues(alpha: 0.6) : Colors.blueAccent.withValues(alpha: 0.6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                minimumSize: const Size(150, 55),
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: isLoading
+                    ? Semantics(
+                        label: 'Loading protection status',
+                        child: const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        ),
+                      )
+                    : Text(
+                        isProtected ? "STOP" : "START",
+                        key: ValueKey<bool>(isProtected),
+                        style: const TextStyle(fontSize: 18, color: Colors.white),
                       ),
-                    ),
-                    child: Text(
-                      isProtected ? "STOP" : "START",
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
+              ),
+            ),
           ],
         ),
       ),
