@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:blocked_app/main.dart';
 
 void main() {
@@ -8,6 +9,7 @@ void main() {
 
   setUp(() {
     TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
   });
 
   tearDown(() {
@@ -15,7 +17,9 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  testWidgets('Dashboard initializes as Unprotected when status is not CONNECTED', (WidgetTester tester) async {
+  testWidgets(
+      'Dashboard initializes as Unprotected when status is not CONNECTED',
+      (WidgetTester tester) async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -24,7 +28,8 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(
+        const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Unprotected'), findsOneWidget);
@@ -32,7 +37,9 @@ void main() {
     expect(find.byIcon(Icons.shield_outlined), findsOneWidget);
   });
 
-  testWidgets('Dashboard initializes as Protection Active when status is CONNECTED', (WidgetTester tester) async {
+  testWidgets(
+      'Dashboard initializes as Protection Active when status is CONNECTED',
+      (WidgetTester tester) async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -41,7 +48,8 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(
+        const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -49,7 +57,8 @@ void main() {
     expect(find.byIcon(Icons.shield), findsOneWidget);
   });
 
-  testWidgets('Start Protection updates UI to Protection Active on SUCCESS', (WidgetTester tester) async {
+  testWidgets('Start Protection updates UI to Protection Active on SUCCESS',
+      (WidgetTester tester) async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -61,7 +70,8 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(
+        const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Unprotected'), findsOneWidget);
@@ -74,7 +84,8 @@ void main() {
     expect(find.text('STOP'), findsOneWidget);
   });
 
-  testWidgets('Stop Protection updates UI to Unprotected on SUCCESS', (WidgetTester tester) async {
+  testWidgets('Stop Protection updates UI to Unprotected on SUCCESS',
+      (WidgetTester tester) async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -86,7 +97,8 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(
+        const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -99,7 +111,8 @@ void main() {
     expect(find.text('START'), findsOneWidget);
   });
 
-  testWidgets('Start Protection shows SnackBar on PERMISSION_DENIED', (WidgetTester tester) async {
+  testWidgets('Start Protection shows SnackBar on PERMISSION_DENIED',
+      (WidgetTester tester) async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -111,7 +124,8 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(
+        const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     // Tap START button
@@ -123,7 +137,8 @@ void main() {
     expect(find.text('Permission denied. VPN cannot start.'), findsOneWidget);
   });
 
-  testWidgets('Start Protection shows SnackBar on PlatformException', (WidgetTester tester) async {
+  testWidgets('Start Protection shows SnackBar on PlatformException',
+      (WidgetTester tester) async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -135,7 +150,8 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(
+        const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     // Tap START button
