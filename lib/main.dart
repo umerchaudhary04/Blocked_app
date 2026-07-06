@@ -174,27 +174,33 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(height: 40),
-            isLoading
-                ? Semantics(
-                    label: 'Loading protection status',
-                    child: const CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: _toggleProtection,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+            ElevatedButton(
+              onPressed: isLoading ? null : _toggleProtection,
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(140, 50),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: isProtected ? Colors.red : Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: isLoading
+                  ? Semantics(
+                      label: 'Loading protection status',
+                      child: const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       ),
-                    ),
-                    child: Text(
+                    )
+                  : Text(
                       isProtected ? "STOP" : "START",
                       style: const TextStyle(fontSize: 18, color: Colors.white),
                     ),
-                  ),
+            ),
           ],
         ),
       ),
