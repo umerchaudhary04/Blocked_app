@@ -174,27 +174,33 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(height: 40),
-            isLoading
-                ? Semantics(
-                    label: 'Loading protection status',
-                    child: const CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: _toggleProtection,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: isLoading
+                  ? Semantics(
+                      key: const ValueKey('loading_indicator'),
+                      label: 'Loading protection status',
+                      child: const CircularProgressIndicator(),
+                    )
+                  : ElevatedButton(
+                      key: const ValueKey('protection_toggle_button'),
+                      onPressed: _toggleProtection,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15),
+                        backgroundColor:
+                            isProtected ? Colors.red : Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: Text(
+                        isProtected ? "STOP" : "START",
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
-                    child: Text(
-                      isProtected ? "STOP" : "START",
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
+            ),
           ],
         ),
       ),
