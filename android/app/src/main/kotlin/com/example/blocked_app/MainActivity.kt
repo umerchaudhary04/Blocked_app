@@ -10,6 +10,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.blocked.app/native"
     private var pendingResult: MethodChannel.Result? = null
+    private var pendingDnsServer: String? = null
     private val VPN_REQUEST_CODE = 24
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -20,6 +21,7 @@ class MainActivity: FlutterActivity() {
                 "startProtection" -> {
                     // Phase 2: Start permission checking process
                     pendingResult = result
+                    pendingDnsServer = call.argument<String>("dnsServer")
                     startVpn()
                 }
                 "stopProtection" -> {
@@ -69,6 +71,9 @@ class MainActivity: FlutterActivity() {
     private fun startVpnService() {
         val intent = Intent(this, BlockedVpnService::class.java)
         intent.action = "START_VPN"
+        if (pendingDnsServer != null) {
+            intent.putExtra("DNS_SERVER", pendingDnsServer)
+        }
         startService(intent)
     }
 }

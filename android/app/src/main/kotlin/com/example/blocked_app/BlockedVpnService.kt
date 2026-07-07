@@ -28,7 +28,8 @@ class BlockedVpnService : VpnService() {
         builder.addAddress("fd00::1", 128)
         builder.addRoute("::", 0)
         // Ensure standard DNS for this phase, update to Cloudflare Family for protection
-        builder.addDnsServer("1.1.1.3")
+        val dnsServer = intent?.getStringExtra("DNS_SERVER") ?: "1.1.1.3"
+        builder.addDnsServer(dnsServer)
 
         try {
             vpnInterface = builder.setSession("Blocked VPN").establish()

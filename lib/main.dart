@@ -94,7 +94,9 @@ class _DashboardState extends State<Dashboard> {
           await prefs.setBool('isProtected', false);
         }
       } else {
-        final String result = await platform.invokeMethod('startProtection');
+        final String result = await platform.invokeMethod('startProtection', {
+          'dnsServer': '1.1.1.3', // Configure Cloudflare Family protection DNS here
+        });
 
         // Phase 2: Proper result handling and UI update
         if (result == "CONNECTED") {
