@@ -3,6 +3,7 @@ package com.example.blocked_app
 import android.content.Intent
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
+import android.util.Log
 
 class BlockedVpnService : VpnService() {
     private var vpnInterface: ParcelFileDescriptor? = null
@@ -34,7 +35,7 @@ class BlockedVpnService : VpnService() {
             vpnInterface = builder.setSession("Blocked VPN").establish()
             isRunning = true // Phase 2: Update status
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("BlockedVpnService", "Failed to establish VPN session", e)
             isRunning = false // Phase 2: Update status on failure
         }
         
