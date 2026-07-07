@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:blocked_app/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('com.blocked.app/native');
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     TestWidgetsFlutterBinding.ensureInitialized();
   });
 
@@ -24,7 +26,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Unprotected'), findsOneWidget);
@@ -41,7 +43,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -61,7 +63,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Unprotected'), findsOneWidget);
@@ -86,7 +88,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -111,7 +113,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     // Tap START button
@@ -135,7 +137,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard()));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
     await tester.pumpAndSettle();
 
     // Tap START button
@@ -144,6 +146,6 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(SnackBar), findsOneWidget);
-    expect(find.text('System Error: Test error message'), findsOneWidget);
+    expect(find.text('An unexpected error occurred. Please try again.'), findsOneWidget);
   });
 }
