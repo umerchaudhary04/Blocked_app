@@ -1,4 +1,4 @@
-package com.example.blocked_app
+package com.blocked.app
 
 import android.app.Activity
 import android.content.Intent

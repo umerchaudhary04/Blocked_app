@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.blocked_app">
+    package="com.blocked.app">
 
     <application
         android:label="blocked_app"
