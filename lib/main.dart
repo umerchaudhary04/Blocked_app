@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'services/preferences_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
+  await PreferencesService.init();
+  final prefs = PreferencesService.prefs;
   final bool initialIsProtected = prefs.getBool('isProtected') ?? false;
 
   runApp(MyApp(initialIsProtected: initialIsProtected));
@@ -67,7 +68,7 @@ class _DashboardState extends State<Dashboard> {
         }
 
         try {
-          final prefs = await SharedPreferences.getInstance();
+          final prefs = PreferencesService.prefs;
           await prefs.setBool('isProtected', realStatus);
         } catch (e) {
           debugPrint("Failed to cache status: $e");
@@ -90,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
           setState(() {
             isProtected = false;
           });
-          final prefs = await SharedPreferences.getInstance();
+          final prefs = PreferencesService.prefs;
           await prefs.setBool('isProtected', false);
         }
       } else {
@@ -101,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
           setState(() {
             isProtected = true;
           });
-          final prefs = await SharedPreferences.getInstance();
+          final prefs = PreferencesService.prefs;
           await prefs.setBool('isProtected', true);
         } else if (result == "PERMISSION_DENIED") {
           _showError("Permission denied. VPN cannot start.");
