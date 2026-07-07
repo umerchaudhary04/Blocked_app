@@ -119,10 +119,7 @@ class _DashboardState extends State<Dashboard> {
   // Phase 2: User-friendly error display
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.redAccent,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
     );
   }
 
@@ -140,7 +137,6 @@ class _DashboardState extends State<Dashboard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Phase 2: Add Branding within app
-            // Image.asset('assets/images/logo.png', height: 150), // Uncomment and use actual asset path
             const Icon(
               Icons.security,
               size: 80,
@@ -183,9 +179,12 @@ class _DashboardState extends State<Dashboard> {
                     onPressed: _toggleProtection,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
+                        horizontal: 40,
+                        vertical: 15,
+                      ),
+                      backgroundColor: isProtected
+                          ? Colors.red
+                          : Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
