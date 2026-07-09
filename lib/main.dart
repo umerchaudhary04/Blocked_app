@@ -110,7 +110,8 @@ class _DashboardState extends State<Dashboard> {
         }
       }
     } on PlatformException catch (e) {
-      _showError("System Error: ${e.message}");
+      debugPrint("System Error: ${e.message}");
+      _showError("An unexpected error occurred. Please try again.");
     }
 
     setState(() {
@@ -176,27 +177,38 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(height: 40),
-            isLoading
-                ? Semantics(
-                    label: 'Loading protection status',
-                    child: const CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: _toggleProtection,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      backgroundColor:
-                          isProtected ? Colors.red : Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+            ElevatedButton(
+              onPressed: isLoading ? null : _toggleProtection,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40, vertical: 15),
+                backgroundColor:
+                    isProtected ? Colors.red : Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: isLoading
+                  ? Semantics(
+                      label: 'Loading protection status',
+                      child: const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: Text(
+                        isProtected ? "STOP" : "START",
+                        key: ValueKey<bool>(isProtected),
+                        style: const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
-                    child: Text(
-                      isProtected ? "STOP" : "START",
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
+            ),
           ],
         ),
       ),
