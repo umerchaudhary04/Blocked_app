@@ -34,7 +34,7 @@ class BlockedVpnService : VpnService() {
             vpnInterface = builder.setSession("Blocked VPN").establish()
             isRunning = true // Phase 2: Update status
         } catch (e: Exception) {
-            e.printStackTrace()
+            android.util.Log.e("BlockedVpnService", "Failed to establish VPN", e)
             isRunning = false // Phase 2: Update status on failure
         }
         

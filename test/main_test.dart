@@ -146,6 +146,30 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(SnackBar), findsOneWidget);
-    expect(find.text('System Error: Test error message'), findsOneWidget);
+    expect(find.text('An unexpected error occurred. Please try again.'), findsOneWidget);
+  });
+
+  testWidgets('Stop Protection shows SnackBar on PlatformException', (WidgetTester tester) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      if (methodCall.method == 'getStatus') {
+        return 'CONNECTED';
+      }
+      if (methodCall.method == 'stopProtection') {
+        throw PlatformException(code: 'ERROR', message: 'Test stop error message');
+      }
+      return null;
+    });
+
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: true)));
+    await tester.pumpAndSettle();
+
+    // Tap STOP button
+    await tester.tap(find.text('STOP'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('System Error: Test stop error message'), findsOneWidget);
   });
 }
