@@ -10,7 +10,7 @@ class NativeBridge {
         if (dnsServer != null) 'dnsServer': dnsServer,
       });
     } on PlatformException catch (e) {
-      debugPrint("Failed to start protection: '${e.message}'.");
+      debugPrint("Failed to start protection: '$e'.");
     }
   }
 
@@ -18,7 +18,7 @@ class NativeBridge {
     try {
       await _channel.invokeMethod('stopProtection');
     } on PlatformException catch (e) {
-      debugPrint("Failed to stop protection: '${e.message}'.");
+      debugPrint("Failed to stop protection: '$e'.");
     }
   }
 }
