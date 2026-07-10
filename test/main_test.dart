@@ -9,7 +9,7 @@ void main() {
 
   setUp(() {
     TestWidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({'isProtected': false});
   });
 
   tearDown(() {
@@ -35,6 +35,7 @@ void main() {
   });
 
   testWidgets('Dashboard initializes as Protection Active when status is CONNECTED', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({'isProtected': true});
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -43,7 +44,7 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: true)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
@@ -70,13 +71,16 @@ void main() {
 
     // Tap START button
     await tester.tap(find.text('START'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
 
     expect(find.text('Protection Active'), findsOneWidget);
     expect(find.text('STOP'), findsOneWidget);
   });
 
   testWidgets('Stop Protection updates UI to Unprotected on SUCCESS', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({'isProtected': true});
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       if (methodCall.method == 'getStatus') {
@@ -88,14 +92,16 @@ void main() {
       return null;
     });
 
-    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: false)));
+    await tester.pumpWidget(const MaterialApp(home: Dashboard(initialIsProtected: true)));
     await tester.pumpAndSettle();
 
     expect(find.text('Protection Active'), findsOneWidget);
 
     // Tap STOP button
     await tester.tap(find.text('STOP'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
 
     expect(find.text('Unprotected'), findsOneWidget);
     expect(find.text('START'), findsOneWidget);

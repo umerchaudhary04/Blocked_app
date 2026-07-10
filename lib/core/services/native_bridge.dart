@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 class NativeBridge {
   static const MethodChannel _channel = MethodChannel('com.blocked.app/native');
 
-  static Future<void> startProtection() async {
+  static Future<void> startProtection({String? dnsServer}) async {
     try {
-      await _channel.invokeMethod('startProtection');
+      await _channel.invokeMethod('startProtection', {
+        if (dnsServer != null) 'dnsServer': dnsServer,
+      });
     } on PlatformException catch (e) {
       debugPrint("Failed to start protection: '$e'.");
     }
